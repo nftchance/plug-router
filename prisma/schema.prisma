@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id String @id @default(uuid())
+
+  address String @unique
+  apiKey  String @unique @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Backwards relational fields.
+  executions Execution[]
+}
+
+model Execution {
+  id String @id @default(uuid())
+
+  client     Client  @relation(fields: [clientId], references: [id])
+  simulation Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Backwards relational fields.
+  clientId String
+  plugs    Plugs?  @relation(fields: [plugsId], references: [id])
+  plugsId  String?
+}
+
+model Plugs {
+  id String @id @default(uuid())
+
+  // Signature & simulation related fields.
+  chainId    Int[]
+  executions Execution[]
+
+  // Onchain fields.
+  socket  String
+  actions String
+  salt    String
+  fee     Int
+
+  // Backwards relational fields.
+  livePlugs LivePlugs[]
+}
+
+model LivePlugs {
+  id String @id @default(uuid())
+
+  // Onchain fields.
+  plugs     Plugs  @relation(fields: [plugsId], references: [id])
+  plugsId   String
+  signature String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Backwards relational fields.
+  socketUserAddress String
+  socketAddress     String
+}
