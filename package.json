@@ -21,7 +21,6 @@
 		"onplug"
 	],
 	"scripts": {
-		"postinstall": "pnpm predev:prisma",
 		"prebuild:lint": "tsc --noEmit",
 		"prebuild:format": "prettier --write .",
 		"prebuild": "run-s prebuild:*",

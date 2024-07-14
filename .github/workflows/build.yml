@@ -44,7 +44,7 @@ jobs:
               env:
                   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
 
-            - name: 🧪 Lint and Build
-              run: pnpm lint && pnpm build
+            - name: 🧪 Build
+              run: pnpm build
               env:
                   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
