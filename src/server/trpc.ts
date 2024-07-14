@@ -1,6 +1,7 @@
 import superjson from "superjson"
 import { ZodError } from "zod"
 
+import { Client } from "@prisma/client"
 import { TRPCError, initTRPC } from "@trpc/server"
 import { CreateExpressContextOptions } from "@trpc/server/adapters/express"
 import { CreateHTTPContextOptions } from "@trpc/server/adapters/standalone"
@@ -21,14 +22,28 @@ export const createContext = async (
 		apiKey = options.info.connectionParams?.["x-api-key"]
 	}
 
+	if (Array.isArray(apiKey)) {
+		throw new TRPCError({
+			code: "UNAUTHORIZED",
+			message: "INVALID_API_KEY_CONFIGURATION"
+		})
+	}
+
+	const client = apiKey
+		? await db.client.findUnique({
+				where: { apiKey }
+			})
+		: null
+
 	return {
 		apiKey,
+		client,
 		db,
 		emitter
 	}
 }
 
-const t = initTRPC.context<typeof createContext>().create({
+const t = initTRPC.context<Context>().create({
 	transformer: superjson,
 	errorFormatter({ shape, error }) {
 		return {
@@ -49,31 +64,22 @@ export const createTRPCRouter = t.router
 export const publicProcedure = t.procedure
 
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
-	if (!ctx.apiKey || Array.isArray(ctx.apiKey)) {
-		throw new TRPCError({
-			code: "UNAUTHORIZED",
-			message: "INVALID_API_KEY_CONFIGURATION"
-		})
-	}
-
-	const client = await ctx.db.client.findUnique({
-		where: { apiKey: ctx.apiKey }
-	})
-
-	if (client === null) {
+	if (ctx.client === null) {
 		throw new TRPCError({
 			code: "UNAUTHORIZED",
 			message: "INVALID_API_KEY"
 		})
 	}
 
-	return next({
-		ctx: {
-			client
-		}
-	})
+	return next({ ctx: { ...ctx, apiKey: ctx.apiKey!, client: ctx.client! } })
 })
 
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed)
 
 export const mergeRouters = t.mergeRouters
+
+export type Context = Awaited<ReturnType<typeof createContext>>
+export type AuthenticatedContext = Context & {
+	apiKey: NonNullable<Context["apiKey"]>
+	client: NonNullable<Context["client"]>
+}

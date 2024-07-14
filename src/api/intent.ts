@@ -19,21 +19,16 @@ export default createTRPCRouter({
 	create: publicProcedure
 		.input(IntentRequestSchema)
 		.output(IntentResponseSchema)
-		.mutation(
-			async ({ input, ctx }) =>
-				await intent.create(ctx.db, ctx.emitter, input)
-		),
+		.mutation(async ({ input, ctx }) => await intent.create(ctx, input)),
 	// Announce intents to the Plug network subscribers that have set a
 	// scope for intents they are willing to solve for.
 	onCreate: protectedProcedure
 		.input(IntentStreamRequestSchema)
-		.subscription(({ input, ctx }) =>
-			intent.onCreate(ctx.db, ctx.emitter, input)
-		),
+		.subscription(({ input, ctx }) => intent.onCreate(ctx, input)),
 	// Get an infinite stream of intents that have been created in a
 	// given scope with pagination, limit and cursor support.
 	infinite: protectedProcedure
 		.input(IntentInfiniteRequestSchema)
 		.output(IntentInfiniteResponseSchema)
-		.query(async ({ input, ctx }) => await intent.infinite(ctx.db, input))
+		.query(async ({ input, ctx }) => await intent.infinite(ctx, input))
 })

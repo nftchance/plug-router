@@ -1,10 +1,7 @@
-import EventEmitter from "events"
-
-import { PrismaClient } from "@prisma/client"
+import { Client } from "@prisma/client"
 import { TRPCError, sse } from "@trpc/server"
 
 import {
-	Address,
 	Addresses,
 	IntentInfiniteRequest,
 	IntentInfiniteResponse,
@@ -13,13 +10,13 @@ import {
 	IntentStreamRequest,
 	streamToAsyncIterable
 } from "@/src/lib"
+import { AuthenticatedContext, Context } from "@/src/server"
 
 export class Intent {
 	static STREAM_INTENT_KEY = "intent"
 
 	public readonly create = async (
-		db: PrismaClient,
-		emitter: EventEmitter,
+		ctx: Context,
 		data: IntentRequest
 	): Promise<IntentResponse> => {
 		// TODO: Confirm the signature is valid -- Will need to support base
@@ -41,24 +38,23 @@ export class Intent {
 			})
 		}
 
-		const intent = await db.intent.create({
+		const intent = await ctx.db.intent.create({
 			data
 		})
 
-		emitter.emit(Intent.STREAM_INTENT_KEY, data)
+		ctx.emitter.emit(Intent.STREAM_INTENT_KEY, data)
 
 		return intent
 	}
 
 	public readonly onCreate = async function* (
-		db: PrismaClient,
-		emitter: EventEmitter,
+		ctx: AuthenticatedContext,
 		input: IntentStreamRequest
 	) {
 		let cursor: Date | undefined = undefined
 
 		if (input.lastEventId) {
-			const intentById = await db.intent.findFirst({
+			const intentById = await ctx.db.intent.findFirst({
 				where: {
 					id: input.lastEventId
 				}
@@ -66,41 +62,14 @@ export class Intent {
 			cursor = intentById?.createdAt
 		}
 
-		const solvers = await db.client.findMany({
-			where: {
-				apiKey: {
-					in: input.apiKeys
-				}
-			}
-		})
-
-		const solverAddresses = solvers.map(solver => solver.address)
-
-		if (solverAddresses.length === 0) {
-			throw new TRPCError({
-				code: "BAD_REQUEST",
-				message: "No solver clients are available to listen to intents."
-			})
-		}
-
-		const where = getWhere(
-			input.signer,
-			input.socket,
-			solverAddresses,
-			cursor
-		)
-
 		let unsubscribe = () => {}
 
 		const stream = new ReadableStream<IntentResponse>({
 			async start(controller) {
 				const handleCreate = (intent: IntentResponse) => {
-					// Filter down to intents that have defined this Solver so
-					// that other Solvers can't listen to intents that are
-					// intended for another executing party.
-					const validSolver = solverAddresses.includes(intent.solver)
-
-					if (validSolver === false) return
+					// Filter down to intents that have defined the authenticated
+					// client as the solver for the intent.
+					if (ctx.client.address !== intent.solver) return
 
 					// Filter down to signers that the user has scoped to:
 					// • Listening to intents from all signers.
@@ -127,19 +96,21 @@ export class Intent {
 					controller.enqueue(intent)
 				}
 
-				emitter.on(Intent.STREAM_INTENT_KEY, handleCreate)
+				ctx.emitter.on(Intent.STREAM_INTENT_KEY, handleCreate)
 				unsubscribe = () => {
-					emitter.off(Intent.STREAM_INTENT_KEY, handleCreate)
+					ctx.emitter.off(Intent.STREAM_INTENT_KEY, handleCreate)
 				}
 
-				const intents: Array<IntentResponse> = await db.intent.findMany(
-					{
-						where,
+				const intents: Array<IntentResponse> =
+					await ctx.db.intent.findMany({
+						where: {
+							...getWhere(ctx.client, input.signer, input.socket),
+							createdAt: cursor ? { gt: cursor } : undefined
+						},
 						orderBy: {
 							createdAt: "asc"
 						}
-					}
-				)
+					})
 
 				for (const intent of intents) {
 					controller.enqueue(intent)
@@ -159,42 +130,23 @@ export class Intent {
 	}
 
 	public readonly infinite = async (
-		db: PrismaClient,
+		ctx: AuthenticatedContext,
 		input: IntentInfiniteRequest
 	): Promise<IntentInfiniteResponse> => {
-		const solvers = await db.client.findMany({
-			where: {
-				apiKey: {
-					in: input.apiKeys
-				}
-			}
-		})
-
-		const solverAddresses = solvers.map(solver => solver.address)
-
-		const where = getWhere(
-			input.signer,
-			input.socket,
-			solverAddresses,
-			input.cursor
-		)
-
-		const orderBy = {
-			createdAt: "desc"
-		} as const
-
 		const take = input.take ?? 20
 
-		const page = await db.intent.findMany({
+		const page = await ctx.db.intent.findMany({
 			where: {
-				...where,
+				...getWhere(ctx.client, input.signer, input.socket),
 				createdAt: input.cursor
 					? {
 							lte: input.cursor
 						}
 					: undefined
 			},
-			orderBy,
+			orderBy: {
+				createdAt: "desc"
+			},
 			take: take + 1
 		})
 
@@ -211,10 +163,9 @@ export class Intent {
 }
 
 export const getWhere = (
+	client: Client,
 	signers?: Addresses,
-	sockets?: Addresses,
-	solvers?: Array<Address>,
-	cursor?: Date
+	sockets?: Addresses
 ) => {
 	const signer =
 		signers === undefined
@@ -228,13 +179,10 @@ export const getWhere = (
 			: Array.isArray(sockets)
 				? { in: sockets }
 				: sockets
-	const solver = { in: solvers }
-	const createdAt = cursor ? { gt: cursor } : undefined
 
 	return {
+		solver: client.address,
 		signer,
-		socket,
-		solver,
-		createdAt
+		socket
 	}
 }

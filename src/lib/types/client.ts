@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+import { Prisma } from "@prisma/client"
+
 import { AddressSchema } from "@/src/lib/types/utils"
 
 export const ClientRequestSchema = z.object({
@@ -13,3 +15,6 @@ export const ClientResponseSchema = z.object({
 
 export type ClientRequest = z.infer<typeof ClientRequestSchema>
 export type ClientResponse = z.infer<typeof ClientResponseSchema>
+
+export const client = Prisma.validator<Prisma.ClientDefaultArgs>()({})
+export type Client = Prisma.ClientGetPayload<typeof client>

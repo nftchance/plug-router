@@ -25,7 +25,6 @@ export type IntentRequest = z.infer<typeof IntentRequestSchema>
 export type IntentResponse = z.infer<typeof IntentResponseSchema>
 
 export const IntentStreamRequestSchema = z.object({
-	apiKeys: z.array(z.string()).min(1),
 	lastEventId: z.string().optional(),
 	signer: AddressesSchema.optional(),
 	socket: AddressesSchema.optional()
@@ -34,7 +33,6 @@ export const IntentStreamRequestSchema = z.object({
 export type IntentStreamRequest = z.infer<typeof IntentStreamRequestSchema>
 
 export const IntentInfiniteRequestSchema = z.object({
-	apiKeys: z.array(z.string()).min(1),
 	cursor: z.date().optional(),
 	take: z.number().min(1).max(100).optional(),
 	signer: AddressesSchema.optional(),
