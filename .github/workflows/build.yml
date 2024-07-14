@@ -41,6 +41,8 @@ jobs:
 
             - name: 📦 Install dependencies
               run: pnpm install
+              env:
+                  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
 
             - name: 🧪 Lint and Build
               run: pnpm lint && pnpm build
