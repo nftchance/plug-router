@@ -40,8 +40,9 @@ jobs:
                       ${{ runner.os }}-pnpm-store-
 
             - name: 📦 Install dependencies
-              run: |
-                  pnpm install
+              run: pnpm install
 
             - name: 🧪 Lint and Build
               run: pnpm lint && pnpm build
+              env:
+                  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
