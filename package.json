@@ -1,111 +1,112 @@
 {
-  "name": "@nftchance/plug-router",
-  "version": "0.0.0",
-  "description": "Primary backend router for Plug intents and packaged SDK for external use.",
-  "author": "Plug <hello@onplug.io> (https://onplug.io)",
-  "maintainers": [
-    "🟠 CHANCE <chance@onplug.io>"
-  ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/nftchance/plug-router.git"
-  },
-  "keywords": [
-    "plug",
-    "router",
-    "intents",
-    "sdk",
-    "api",
-    "solver",
-    "onplug"
-  ],
-  "scripts": {
-    "prebuild:prisma": "pnpm prisma:generate",
-    "prebuild:lint": "tsc --noEmit",
-    "prebuild:format": "prettier --write .",
-    "prebuild": "run-s prebuild:*",
-    "build": "pnpm tsup",
-    "predev:db": "tsx ./src/lib/scripts/db.ts",
-    "predev:prisma": "pnpm prisma:migrate && pnpm prisma:push",
-    "predev": "run-s predev:*",
-    "dev:express": "tsx watch ./src/server/index.ts",
-    "dev": "run-p dev:*",
-    "prisma:generate": "pnpm prisma generate",
-    "prisma:migrate": "pnpm prisma migrate dev",
-    "prisma:push": "pnpm prisma db push",
-    "prisma:pull": "pnpm prisma db pull",
-    "prisma:seed": "pnpm prisma db seed",
-    "prisma:reset": "pnpm prisma db push --force-reset && pnpm prisma db push"
-  },
-  "dependencies": {
-    "@prisma/client": "^5.16.2",
-    "@trpc/client": "11.0.0-rc.461",
-    "@trpc/server": "11.0.0-rc.461",
-    "axios": "^1.7.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "superjson": "^2.2.1",
-    "viem": "^2.17.3",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.14.10",
-    "dedent": "^1.5.3",
-    "execa": "^9.3.0",
-    "fs-extra": "^11.2.0",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^3.3.3",
-    "prisma": "^5.16.2",
-    "tsup": "^8.1.0",
-    "tsx": "^4.16.2",
-    "typescript": "^5.5.3"
-  },
-  "sideEffects": false,
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./api": {
-      "types": "./dist/api/index.d.ts",
-      "default": "./dist/api/index.js"
-    },
-    "./core": {
-      "types": "./dist/core/index.d.ts",
-      "default": "./dist/core/index.js"
-    },
-    "./lib": {
-      "types": "./dist/lib/index.d.ts",
-      "default": "./dist/lib/index.js"
-    },
-    "./sdk": {
-      "types": "./dist/sdk/index.d.ts",
-      "default": "./dist/sdk/index.js"
-    },
-    "./server": {
-      "types": "./dist/server/index.d.ts",
-      "default": "./dist/server/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "files": [
-    "/api",
-    "/core",
-    "/lib",
-    "/sdk",
-    "/server",
-    "/src/**/*",
-    "/dist/**/*",
-    "LICENSE",
-    "README.md"
-  ]
+	"name": "@nftchance/plug-router",
+	"version": "0.0.0",
+	"description": "Primary backend router for Plug intents and packaged SDK for external use.",
+	"author": "Plug <hello@onplug.io> (https://onplug.io)",
+	"maintainers": [
+		"🟠 CHANCE <chance@onplug.io>"
+	],
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nftchance/plug-router.git"
+	},
+	"keywords": [
+		"plug",
+		"router",
+		"intents",
+		"sdk",
+		"api",
+		"solver",
+		"onplug"
+	],
+	"scripts": {
+		"prebuild:prisma": "pnpm prisma:generate",
+		"prebuild:lint": "tsc --noEmit",
+		"prebuild:format": "prettier --write .",
+		"prebuild": "run-s prebuild:*",
+		"build": "pnpm tsup",
+		"build:clean": "rm -rf dist && rm -rf api && rm -rf core && rm -rf lib && rm -rf sdk && rm -rf server",
+		"predev:db": "tsx ./src/lib/scripts/db.ts",
+		"predev:prisma": "pnpm prisma:migrate && pnpm prisma:push",
+		"predev": "run-s predev:*",
+		"dev:express": "tsx watch ./src/server/index.ts",
+		"dev": "run-p dev:*",
+		"prisma:generate": "pnpm prisma generate",
+		"prisma:migrate": "pnpm prisma migrate dev",
+		"prisma:push": "pnpm prisma db push",
+		"prisma:pull": "pnpm prisma db pull",
+		"prisma:seed": "pnpm prisma db seed",
+		"prisma:reset": "pnpm prisma db push --force-reset && pnpm prisma db push"
+	},
+	"dependencies": {
+		"@prisma/client": "^5.16.2",
+		"@trpc/client": "11.0.0-rc.461",
+		"@trpc/server": "11.0.0-rc.461",
+		"axios": "^1.7.2",
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.5",
+		"express": "^4.19.2",
+		"superjson": "^2.2.1",
+		"viem": "^2.17.3",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
+		"@types/cors": "^2.8.17",
+		"@types/express": "^4.17.21",
+		"@types/fs-extra": "^11.0.4",
+		"@types/node": "^20.14.10",
+		"dedent": "^1.5.3",
+		"execa": "^9.3.0",
+		"fs-extra": "^11.2.0",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^3.3.3",
+		"prisma": "^5.16.2",
+		"tsup": "^8.1.0",
+		"tsx": "^4.16.2",
+		"typescript": "^5.5.3"
+	},
+	"sideEffects": false,
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./api": {
+			"types": "./dist/api/index.d.ts",
+			"default": "./dist/api/index.js"
+		},
+		"./core": {
+			"types": "./dist/core/index.d.ts",
+			"default": "./dist/core/index.js"
+		},
+		"./lib": {
+			"types": "./dist/lib/index.d.ts",
+			"default": "./dist/lib/index.js"
+		},
+		"./sdk": {
+			"types": "./dist/sdk/index.d.ts",
+			"default": "./dist/sdk/index.js"
+		},
+		"./server": {
+			"types": "./dist/server/index.d.ts",
+			"default": "./dist/server/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"/api",
+		"/core",
+		"/lib",
+		"/sdk",
+		"/server",
+		"/src/**/*",
+		"/dist/**/*",
+		"LICENSE",
+		"README.md"
+	]
 }
