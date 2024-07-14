@@ -1,8 +1,8 @@
-import { Client } from "@prisma/client"
 import { TRPCError, sse } from "@trpc/server"
 
 import {
 	Addresses,
+	Client,
 	IntentInfiniteRequest,
 	IntentInfiniteResponse,
 	IntentRequest,
