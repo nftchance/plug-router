@@ -174,5 +174,8 @@ dist
 .yarn/install-state.gz
 .pnp.\*
 
-/api/**
-/client/**
+api
+core
+lib
+sdk
+server

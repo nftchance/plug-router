@@ -1,5 +1,4 @@
 import dedent from "dedent"
-import { execa } from "execa"
 import { default as fs } from "fs-extra"
 import path from "path"
 import type { Options } from "tsup"
@@ -63,13 +62,11 @@ export function getConfig({ dev, noExport, ...options }: GetConfig): Options {
 		minifyWhitespace: true,
 		treeshake: true,
 		format: ["cjs", "esm"],
-		// splitting: true,
+		splitting: true,
 		target: "es2021",
 		async onSuccess() {
 			if (typeof options.onSuccess === "function")
 				await options.onSuccess()
-			else if (typeof options.onSuccess === "string")
-				execa(options.onSuccess)
 
 			const exports = await generateExports(entry, noExport)
 			await generateProxyPackages(exports)
@@ -144,7 +141,7 @@ async function generateProxyPackages(exports: Exports) {
                 "main": "${entrypoint}"
             }`
 		)
-		ignorePaths.push("/" + key.replace(/^\.\//g, ""))
+		ignorePaths.push(key.replace(/^\.\//g, ""))
 
 		const file = key.replace(/^\.\//g, "").split("/")[0]
 		if (!file || files.has(file)) continue
@@ -343,7 +340,7 @@ async function generateProxyPackages(exports: Exports) {
 			.yarn/install-state.gz
 			.pnp.\*
 
-			${ignorePaths.join("/**\n")}/**
+			${ignorePaths.join("\n")}
   		`
 	)
 }

@@ -5,9 +5,17 @@ import { getConfig } from "./src/lib/utils/tsup"
 
 export default defineConfig(
 	getConfig({
-		entry: ["src/index.ts"],
+		entry: [
+			"src/index.ts",
+			"src/api/index.ts",
+			"src/core/index.ts",
+			"src/lib/index.ts",
+			"src/sdk/index.ts",
+			"src/server/index.ts"
+		],
 		external: [...Object.keys(dependencies)],
 		sourcemap: true,
-		platform: "node"
+		platform: "node",
+		treeshake: true
 	})
 )

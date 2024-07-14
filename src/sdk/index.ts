@@ -10,10 +10,12 @@ import {
 
 import { Router, env } from "@/src"
 
-const linkOptions = (
-	type: "http" | "subscription",
+const linkOptions = (opt: {
+	type: "http" | "subscription"
 	apiKey: string | undefined
-) => {
+}) => {
+	const { type, apiKey } = opt
+
 	const options = {
 		transformer: superjson,
 		[type === "subscription" ? "connectionParams" : "headers"]:
@@ -29,7 +31,7 @@ const linkOptions = (
 }
 
 export const createPlugSDK = (
-	apiKey: Parameters<typeof linkOptions>[1],
+	apiKey: Parameters<typeof linkOptions>[0]["apiKey"],
 	log: boolean = false
 ) =>
 	createTRPCClient<Router>({
@@ -39,8 +41,8 @@ export const createPlugSDK = (
 			}),
 			splitLink({
 				condition: op => op.type === "subscription",
-				true: linkOptions("subscription", apiKey),
-				false: linkOptions("http", apiKey)
+				true: linkOptions({ type: "subscription", apiKey }),
+				false: linkOptions({ type: "http", apiKey })
 			})
 		]
 	})
