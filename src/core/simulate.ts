@@ -1,15 +1,15 @@
 import axios from "axios"
 
 import {
-	env,
 	SimulationBundleRequest,
 	SimulationData,
 	SimulationRequest,
 	SimulationResponse,
-	TransactionSimulator
+	TransactionSimulator,
+	env
 } from "@/src/lib"
 
-export class Simulator implements TransactionSimulator {
+export class Simulate implements TransactionSimulator {
 	post = async (
 		url: string,
 		simulation: SimulationRequest | SimulationBundleRequest

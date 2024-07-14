@@ -4,7 +4,7 @@ import { recoverMessageAddress } from "viem"
 import { PrismaClient } from "@prisma/client"
 import { TRPCError } from "@trpc/server"
 
-import { ClientRequest, ClientResponse } from "@/src/lib"
+import { ClientRequest } from "@/src/lib"
 
 export class Client {
 	private readonly message = (address: string) =>

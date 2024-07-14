@@ -1,27 +1,39 @@
-import { observable } from "@trpc/server/observable"
-
 import { Intent } from "@/src/core"
 import {
-	IntentInput,
-	IntentInputSchema,
-	IntentOutputSchema,
-	StreamInputSchema
+	IntentInfiniteRequestSchema,
+	IntentInfiniteResponseSchema,
+	IntentRequestSchema,
+	IntentResponseSchema,
+	IntentStreamRequestSchema
 } from "@/src/lib"
-import { createTRPCRouter, protectedProcedure } from "@/src/server/trpc"
+import {
+	createTRPCRouter,
+	protectedProcedure,
+	publicProcedure
+} from "@/src/server/trpc"
 
-const manager = new Intent()
+const intent = new Intent()
 
-export const intent = createTRPCRouter({
+export default createTRPCRouter({
 	// Submit a new signed intent to the Plug network.
-	init: protectedProcedure
-		.input(IntentInputSchema)
-		.output(IntentOutputSchema)
-		.mutation(({ input, ctx }) => manager.init(ctx.db, ctx.emitter, input)),
+	create: publicProcedure
+		.input(IntentRequestSchema)
+		.output(IntentResponseSchema)
+		.mutation(
+			async ({ input, ctx }) =>
+				await intent.create(ctx.db, ctx.emitter, input)
+		),
 	// Announce intents to the Plug network subscribers that have set a
 	// scope for intents they are willing to solve for.
-	on: protectedProcedure
-		.input(StreamInputSchema)
-		.subscription(async ({ input, ctx }) =>
-			manager.on(ctx.db, ctx.emitter, input)
-		)
+	onCreate: protectedProcedure
+		.input(IntentStreamRequestSchema)
+		.subscription(({ input, ctx }) =>
+			intent.onCreate(ctx.db, ctx.emitter, input)
+		),
+	// Get an infinite stream of intents that have been created in a
+	// given scope with pagination, limit and cursor support.
+	infinite: protectedProcedure
+		.input(IntentInfiniteRequestSchema)
+		.output(IntentInfiniteResponseSchema)
+		.query(async ({ input, ctx }) => await intent.infinite(ctx.db, input))
 })

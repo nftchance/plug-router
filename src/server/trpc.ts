@@ -1,35 +1,31 @@
-import { IncomingMessage } from "http"
 import superjson from "superjson"
-import ws from "ws"
 import { ZodError } from "zod"
 
-import { initTRPC, TRPCError } from "@trpc/server"
+import { TRPCError, initTRPC } from "@trpc/server"
 import { CreateExpressContextOptions } from "@trpc/server/adapters/express"
-import { NodeHTTPCreateContextFnOptions } from "@trpc/server/adapters/node-http"
+import { CreateHTTPContextOptions } from "@trpc/server/adapters/standalone"
 
 import { db } from "@/src/server/db"
 import { emitter } from "@/src/server/emitter"
 
-export const createInnerTRPCContext = ({
-	apiKey
-}: {
-	apiKey: string | string[] | undefined
-}) => {
+export const createContext = async (
+	options: CreateExpressContextOptions | CreateHTTPContextOptions
+) => {
+	let apiKey: string | string[] | undefined = undefined
+
+	// If the request is made via the subscription link, the api key is
+	// passed in the connectionParams rather than the headers.
+	if ("headers" in options.req) {
+		apiKey = options.req.headers["x-api-key"]
+	} else if ("info" in options) {
+		apiKey = options.info.connectionParams?.["x-api-key"]
+	}
+
 	return {
 		apiKey,
 		db,
 		emitter
 	}
-}
-
-export const createContext = async ({
-	req
-}:
-	| CreateExpressContextOptions
-	| NodeHTTPCreateContextFnOptions<IncomingMessage, ws>) => {
-	const apiKey: string | string[] | undefined = req.headers["x-api-key"]
-
-	return createInnerTRPCContext({ apiKey })
 }
 
 const t = initTRPC.context<typeof createContext>().create({

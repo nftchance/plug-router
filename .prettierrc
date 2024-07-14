@@ -9,10 +9,6 @@
 	"endOfLine": "auto",
 	"plugins": ["@trivago/prettier-plugin-sort-imports"],
 	"importOrder": [
-		"^react$",
-		"^next$",
-		"^next/(.*)$",
-		"next-auth",
 		"<THIRD_PARTY_MODULES>",
 		"^@[a-zA-Z]",
 		"^@/(.*)$",
@@ -21,5 +17,5 @@
 	"importOrderSeparation": true,
 	"importOrderSortSpecifiers": true,
 	"importOrderGroupNamespaceSpecifiers": true,
-	"importOrderCaseInsensitive": true
+	"importOrderCaseInsensitive": false
 }

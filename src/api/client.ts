@@ -5,13 +5,13 @@ import {
 } from "@/src/lib/types/client"
 import { createTRPCRouter, publicProcedure } from "@/src/server/trpc"
 
-const manager = new Client()
+const client = new Client()
 
-export const client = createTRPCRouter({
+export default createTRPCRouter({
 	// Initialize a new client at a specific address with an API key
 	// or generate a new API key for an existing client.
 	init: publicProcedure
 		.input(ClientRequestSchema)
 		.output(ClientResponseSchema)
-		.mutation(async ({ input, ctx }) => await manager.init(ctx.db, input))
+		.mutation(async ({ input, ctx }) => await client.init(ctx.db, input))
 })

@@ -1,4 +1,4 @@
 export * from "./client"
 export * from "./simulation"
-export * from "./stream"
+export * from "./intent"
 export * from "./utils"

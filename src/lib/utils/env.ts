@@ -5,19 +5,22 @@ import { version } from "@/package.json"
 
 dotenv.config()
 
+const DEFAULT_PORT = "4000"
+
 export const envSchema = z.object({
 	// Top level definitions
 	VERSION: z.string().optional().default(version),
 	DATABASE_URL: z.string().min(1),
-	PORT: z.string().optional().default("4000"),
+	PORT: z.string().optional().default(DEFAULT_PORT),
 	API_URL: z
 		.string()
 		.optional()
-		.default("http://localhost:4000/trpc")
+		.default(`http://localhost:${DEFAULT_PORT}`)
 		.refine(url => url.startsWith("http"), "API_URL must start with http"),
 	// Simulation definitions
 	SIMULATOR_URL: z
 		.string()
+		.default("http://localhost:8080")
 		.refine(
 			url => url.startsWith("http"),
 			"SIMULATOR_URL must start with http"

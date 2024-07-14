@@ -1,9 +1,9 @@
 import { inferRouterInputs, inferRouterOutputs } from "@trpc/server"
 
-import { client } from "@/src/api/client"
-import { intent } from "@/src/api/intent"
-import { root } from "@/src/api/root"
-import { simulate } from "@/src/api/simulate"
+import client from "@/src/api/client"
+import intent from "@/src/api/intent"
+import root from "@/src/api/root"
+import simulate from "@/src/api/simulate"
 import { createTRPCRouter } from "@/src/server/trpc"
 
 export const router = createTRPCRouter({
