@@ -6,6 +6,9 @@ import { version } from "@/package.json"
 dotenv.config()
 
 const DEFAULT_PORT = "4000"
+const DEFAULT_RATE_LIMIT_ALLOW_LIST = ["127.0.0.1", "localhost"].join(",")
+const DEFAULT_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000
+const DEFAULT_RATE_LIMIT = 100
 
 export const envSchema = z.object({
 	// Top level definitions
@@ -17,6 +20,26 @@ export const envSchema = z.object({
 		.optional()
 		.default(`http://localhost:${DEFAULT_PORT}`)
 		.refine(url => url.startsWith("http"), "API_URL must start with http"),
+	// Rate limit definitions
+	RATE_LIMIT_ALLOW_LIST: z
+		.string()
+		.optional()
+		.default(DEFAULT_RATE_LIMIT_ALLOW_LIST)
+		.transform(val => val.split(",")),
+	RATE_LIMIT_WINDOW_MS: z
+		.string()
+		.optional()
+		.default(`${DEFAULT_RATE_LIMIT_WINDOW_MS}`)
+		.transform(val => parseInt(val)),
+	RATE_LIMIT: z
+		.string()
+		.optional()
+		.default(`${DEFAULT_RATE_LIMIT}`)
+		.transform(val => parseInt(val)),
+	RATE_LIMIT_MESSAGE: z
+		.string()
+		.optional()
+		.default("Too many requests, please try again later."),
 	// Simulation definitions
 	SIMULATOR_URL: z
 		.string()

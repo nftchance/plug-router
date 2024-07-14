@@ -6,15 +6,14 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express"
 
 import { Router, router } from "@/src/api"
 import { env } from "@/src/lib/utils/env"
-
-import { createContext } from "./trpc"
-
-export * from "@/src/server/trpc"
+import { limiter } from "@/src/server/limiter"
+import { createContext } from "@/src/server/trpc"
 
 const app = express()
 const server = http.createServer(app)
 
 app.use(cors())
+app.use(limiter)
 app.use(
 	"/",
 	createExpressMiddleware<Router>({
@@ -32,3 +31,5 @@ server.listen(env.PORT, () => {
 server.on("error", console.error)
 
 process.on("SIGTERM", () => server.close())
+
+export * from "@/src/server/trpc"
