@@ -24,7 +24,7 @@
 		"prebuild:lint": "tsc --noEmit",
 		"prebuild:format": "prettier --write .",
 		"prebuild": "run-s prebuild:*",
-		"build": "pnpm tsup",
+		"build": "pnpm prisma:generate && pnpm tsup",
 		"predev:db": "tsx ./src/lib/scripts/db.ts",
 		"predev:prisma": "pnpm prisma:migrate && pnpm prisma:push",
 		"predev": "run-s predev:*",
