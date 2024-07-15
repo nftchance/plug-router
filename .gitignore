@@ -38,8 +38,8 @@ node_modules/
 .env.production.local
 .env.local
 
-api
-core
-lib
-sdk
-server
+/dist
+/core
+/lib
+/sdk
+/server

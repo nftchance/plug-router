@@ -10,7 +10,7 @@ import {
 	createTRPCRouter,
 	protectedProcedure,
 	publicProcedure
-} from "@/src/server/trpc"
+} from "@/src/server"
 
 const intent = new Intent()
 

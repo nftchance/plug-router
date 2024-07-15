@@ -1,7 +1,7 @@
 import { exec } from "child_process"
 
 import { version } from "@/package.json"
-import { env } from "@/src/lib/utils/env"
+import { env } from "@/src/lib/utils/bundle/env"
 
 const startDatabase = (
 	containerName: string,

@@ -1,9 +1,6 @@
 import { Client } from "@/src/core"
-import {
-	ClientRequestSchema,
-	ClientResponseSchema
-} from "@/src/lib/types/client"
-import { createTRPCRouter, publicProcedure } from "@/src/server/trpc"
+import { ClientRequestSchema, ClientResponseSchema } from "@/src/lib"
+import { createTRPCRouter, publicProcedure } from "@/src/server"
 
 const client = new Client()
 

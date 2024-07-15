@@ -1,10 +1,6 @@
 import { z } from "zod"
 
-import {
-	AddressSchema,
-	AddressesSchema,
-	SignatureSchema
-} from "@/src/lib/types/utils"
+import { AddressSchema, AddressesSchema, SignatureSchema } from "@/src/lib"
 
 export const IntentRequestSchema = z.object({
 	socket: AddressSchema,

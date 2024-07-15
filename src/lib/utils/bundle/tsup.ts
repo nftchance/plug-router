@@ -121,8 +121,14 @@ async function generateExports(entry: string[], noExport?: string[]) {
  * Generate proxy packages files for each export
  */
 async function generateProxyPackages(exports: Exports) {
-	const ignorePaths = []
-	const files = new Set<string>()
+	const ignorePaths = ["/dist"]
+	const files = new Set<string>([
+		"/src/**/*",
+		"/dist/**/*",
+		"LICENSE",
+		"README.md"
+	])
+
 	for (const [key, value] of Object.entries(exports)) {
 		if (typeof value === "string") continue
 		if (key === ".") continue
@@ -141,17 +147,12 @@ async function generateProxyPackages(exports: Exports) {
                 "main": "${entrypoint}"
             }`
 		)
-		ignorePaths.push(key.replace(/^\.\//g, ""))
+		ignorePaths.push("/" + key.replace(/^\.\//g, ""))
 
 		const file = key.replace(/^\.\//g, "").split("/")[0]
 		if (!file || files.has(file)) continue
 		files.add(`/${file}`)
 	}
-
-	files.add("/src/**/*")
-	files.add("/dist/**/*")
-	files.add("LICENSE")
-	files.add("README.md")
 
 	const packageJson = await fs.readJSON("package.json")
 	packageJson.files = [...files.values()]

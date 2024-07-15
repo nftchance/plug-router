@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { AddressSchema } from "@/src/lib/types/utils"
+import { AddressSchema } from "@/src/lib"
 
 export const ClientRequestSchema = z.object({
 	address: AddressSchema,

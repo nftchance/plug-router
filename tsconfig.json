@@ -40,5 +40,5 @@
 		}
 	},
 	"include": ["src", ".prettierrc", "tsup.config.ts"],
-	"exclude": ["node_modules/**", "dist/**", "src/lib/utils/tsup.ts"]
+	"exclude": ["node_modules/**", "dist/**", "src/lib/utils/bundle/tsup.ts"]
 }

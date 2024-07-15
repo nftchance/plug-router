@@ -5,7 +5,7 @@ import {
 	SimulationDataSchema,
 	SimulationRequestSchema
 } from "@/src/lib"
-import { createTRPCRouter, protectedProcedure } from "@/src/server/trpc"
+import { createTRPCRouter, protectedProcedure } from "@/src/server"
 
 const simulate = new Simulate()
 
