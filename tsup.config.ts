@@ -9,7 +9,6 @@ export default defineConfig(
 			"src/index.ts",
 			"src/core/index.ts",
 			"src/lib/index.ts",
-			"src/sdk/index.ts",
 			"src/server/index.ts"
 		],
 		external: [...Object.keys(dependencies)],

@@ -83,3 +83,4 @@ export type AuthenticatedContext = Context & {
 }
 
 export * from "@/src/server/routes"
+export * from "@/src/server/sdk"
