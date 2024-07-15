@@ -48,3 +48,15 @@ jobs:
               run: pnpm build
               env:
                   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+
+            - name: 🚀 Create Release Pull Request or Publish
+              if: github.ref == 'refs/heads/master'
+              id: changesets
+              uses: changesets/action@v1
+              with:
+                  publish: pnpm changeset publish
+                  commit: "feat: version release"
+                  title: "feat: version release"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
