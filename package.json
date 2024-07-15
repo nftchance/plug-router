@@ -26,7 +26,7 @@
 		"prebuild:format": "prettier --write .",
 		"prebuild": "run-s prebuild:*",
 		"build": "pnpm tsup",
-		"build:clean": "rm -rf dist && rm -rf api && rm -rf core && rm -rf lib && rm -rf sdk && rm -rf server",
+		"build:clean": "rm -rf dist api core lib sdk server",
 		"predev:db": "tsx ./src/lib/scripts/db.ts",
 		"predev:prisma": "pnpm prisma:migrate && pnpm prisma:push",
 		"predev": "run-s predev:*",
@@ -53,6 +53,7 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
+		"@changesets/cli": "^2.27.7",
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
 		"@types/cors": "^2.8.17",
 		"@types/express": "^4.17.21",
@@ -108,5 +109,8 @@
 		"/dist/**/*",
 		"LICENSE",
 		"README.md"
-	]
+	],
+	"publishConfig": {
+		"access": "public"
+	}
 }
