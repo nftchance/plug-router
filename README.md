@@ -1,16 +1,8 @@
 # 🔌 Plug Router
 
-> [!NOTE]
-> This repository is a submodule of the [Plug monorepo](https://github.com/nftchance/plug) that contains all the pieces of the Plug toolkit.
+Plug Router is a self-contained toolkit to create, stream, and simulate intent based Ethereum transactions on the Plug network.
 
-With the Plug Router, you can easily integrate your application with the Plug network. In a few lines of code, you can start receiving intent declarations permissioned to your solver, submit intents on the behalf of users (signers), simulate transaction routes, and more.
-
-All of this has been made available through a simple SDK that is easy to use and consume so that you do not need to run any of the underlying infrastructure.
-
-## Getting an API Key
-
-> [!WARNING]
-> This functionality is not publicly available yet. Please contact the team if you are interested in using the Plug Router or running a Solver.
+All of this has been made available through a simple SDK that is easy to use and consume so that you do not need to run or build any of the underlying.
 
 ## Usage
 
@@ -25,9 +17,6 @@ const plugSDK = createPlugSDK("YOUR_API_KEY")
 ```
 
 Once you have the SDK, you can start using it to interact with the Plug network. There is intellisense support for all of the SDK methods and properties, so you can easily find what you are looking for.
-
-> [!NOTE]
-> There is not currently an OpenAPI specification for the Plug Router. If you would like to submit a PR that adds one, please do so!
 
 ## Development
 
