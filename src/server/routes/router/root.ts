@@ -1,4 +1,4 @@
-import { createTRPCRouter, publicProcedure } from "@/src/server"
+import { createTRPCRouter, publicProcedure } from "@/src/server/router"
 
 export default createTRPCRouter({
 	health: publicProcedure.query(({ ctx }) => ({

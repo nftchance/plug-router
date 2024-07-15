@@ -7,6 +7,7 @@ export default defineConfig(
 	getConfig({
 		entry: [
 			"src/index.ts",
+			"src/cli/index.ts",
 			"src/core/index.ts",
 			"src/lib/index.ts",
 			"src/server/index.ts"

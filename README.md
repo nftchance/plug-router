@@ -1,10 +1,12 @@
 # 🔌 Plug Router
 
-Plug Router is a self-contained toolkit to create, stream, and simulate intent based Ethereum transactions on the Plug network.
+Plug Router is a self-contained toolkit to create, stream, simulate and solve intent based Ethereum transactions on the Plug network.
 
 All of this has been made available through a simple SDK that is easy to use and consume so that you do not need to run or build any of the underlying.
 
 ## Usage
+
+### Router (SDK)
 
 Getting started with router consumption is as simple as installing the package and instantiating the SDK with your API key.
 
@@ -16,7 +18,11 @@ import { createPlugSDK } from "@nftchance/plug-router"
 const plugSDK = createPlugSDK("YOUR_API_KEY")
 ```
 
-Once you have the SDK, you can start using it to interact with the Plug network. There is intellisense support for all of the SDK methods and properties, so you can easily find what you are looking for.
+There is intellisense support for all of the SDK methods and properties, so you can easily find what you are looking for.
+
+### Solver
+
+The solver is a service that is externally hosted from the core router that works to solve the routes for transactions for you.
 
 ## Development
 

@@ -1,6 +1,6 @@
 import { BigNumber, PopulatedTransaction, Wallet } from "ethers"
 
-import { Executor } from "@/src/core"
+import { Executor } from "@/src/core/solver/executors"
 
 export type MempoolExecution = {
 	transaction: PopulatedTransaction

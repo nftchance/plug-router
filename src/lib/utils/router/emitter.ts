@@ -1,4 +1,4 @@
-import EventEmitter from "events"
+import EventEmitter from "node:events"
 
 const globalForEmitter = globalThis as unknown as {
 	emitter: EventEmitter | undefined

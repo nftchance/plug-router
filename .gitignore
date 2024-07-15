@@ -39,7 +39,7 @@ node_modules/
 .env.local
 
 /dist
+/cli
 /core
 /lib
-/sdk
 /server

@@ -122,12 +122,7 @@ async function generateExports(entry: string[], noExport?: string[]) {
  */
 async function generateProxyPackages(exports: Exports) {
 	const ignorePaths = ["/dist"]
-	const files = new Set<string>([
-		"/src/**/*",
-		"/dist/**/*",
-		"LICENSE",
-		"README.md"
-	])
+	const files = new Set<string>(["/dist", "LICENSE", "README.md"])
 
 	for (const [key, value] of Object.entries(exports)) {
 		if (typeof value === "string") continue

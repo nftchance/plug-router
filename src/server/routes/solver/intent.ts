@@ -5,12 +5,12 @@ import {
 	IntentRequestSchema,
 	IntentResponseSchema,
 	IntentStreamRequestSchema
-} from "@/src/lib"
+} from "@/src/lib/types"
 import {
 	createTRPCRouter,
 	protectedProcedure,
 	publicProcedure
-} from "@/src/server"
+} from "@/src/server/router"
 
 const intent = new Intent()
 

@@ -1,9 +1,9 @@
 import { Collector, Executor } from "@/src/core"
 import { DEFAULT_NETWORKS, References } from "@/src/lib"
 
-export type Collectors = Array<Collector<string, unknown>>
-export type Executors = Array<Executor<`${string}Execution`, unknown>>
-export type Processes = Record<string, unknown>
+export type Collectors = Array<Collector<any, any>>
+export type Executors = Array<Executor<any, any>>
+export type Processes = Record<string, any>
 
 export type Retries = {
 	retries: number
@@ -34,10 +34,7 @@ export type Network = NetworkBase & NetworkReferences & NetworkConfig
 
 export type BaseConfig = Partial<Retries> &
 	(
-		| Record<
-				"networks",
-				Record<keyof typeof DEFAULT_NETWORKS, Partial<Network>>
-		  >
+		| Record<"networks", Record<keyof typeof DEFAULT_NETWORKS, Network>>
 		| undefined
 	)
 

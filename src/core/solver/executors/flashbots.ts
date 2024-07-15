@@ -7,7 +7,7 @@ import {
 	RelayResponseError
 } from "@flashbots/ethers-provider-bundle"
 
-import { Executor } from "@/src/core"
+import { Executor } from "@/src/core/solver/executors"
 
 export type FlashbotsExecution = {
 	transaction: providers.TransactionRequest

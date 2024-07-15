@@ -4,8 +4,8 @@ import {
 	SimulationBundleRequestSchema,
 	SimulationDataSchema,
 	SimulationRequestSchema
-} from "@/src/lib"
-import { createTRPCRouter, protectedProcedure } from "@/src/server"
+} from "@/src/lib/types"
+import { createTRPCRouter, protectedProcedure } from "@/src/server/router"
 
 const simulate = new Simulate()
 

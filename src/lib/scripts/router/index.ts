@@ -5,7 +5,7 @@ import http from "http"
 
 import { createExpressMiddleware } from "@trpc/server/adapters/express"
 
-import { env } from "@/src/lib"
+import { env } from "@/src/lib/utils"
 import { Router, createContext, router } from "@/src/server"
 
 const app = express()

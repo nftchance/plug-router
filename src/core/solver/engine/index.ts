@@ -3,6 +3,8 @@ import { EventEmitter } from "node:events"
 import { Collector, Executor, Process } from "@/src/core"
 import { Network } from "@/src/lib"
 
+export * from "./config"
+
 export class Engine<
 	TCollectors extends Collector<any, any>,
 	TExecutors extends Executor<any, any>,

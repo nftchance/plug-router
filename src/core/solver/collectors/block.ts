@@ -1,7 +1,7 @@
 import { providers } from "ethers"
 import { EventEmitter } from "node:events"
 
-import { Collector } from "@/src/core"
+import { Collector } from "@/src/core/solver/collectors"
 
 const key = "NewBlock" as const
 
