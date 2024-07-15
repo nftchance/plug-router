@@ -53,7 +53,7 @@ export class Intent {
 	) {
 		let cursor: Date | undefined = undefined
 
-		if (input.lastEventId) {
+		if (input && input.lastEventId) {
 			const intentById = await ctx.db.intent.findFirst({
 				where: {
 					id: input.lastEventId
@@ -71,27 +71,29 @@ export class Intent {
 					// client as the solver for the intent.
 					if (ctx.client.address !== intent.solver) return
 
-					// Filter down to signers that the user has scoped to:
-					// • Listening to intents from all signers.
-					// • Listening to intents for a specific signer.
-					// • Listening to intents for a specific list of signers.
-					const validSigner =
-						input.signer === undefined ||
-						input.signer === intent.signer ||
-						input.signer.includes(intent.signer)
+					if (input) {
+						// Filter down to signers that the user has scoped to:
+						// • Listening to intents from all signers.
+						// • Listening to intents for a specific signer.
+						// • Listening to intents for a specific list of signers.
+						const validSigner =
+							input.signer === undefined ||
+							input.signer === intent.signer ||
+							input.signer.includes(intent.signer)
 
-					if (validSigner === false) return
+						if (validSigner === false) return
 
-					// Filter down to sockets that the user has scoped to:
-					// • Listening to intents from all sockets.
-					// • Listening to intents for a specific socket.
-					// • Listening to intents for a specific list of sockets.
-					const validSocket =
-						input.socket === undefined ||
-						input.socket === intent.socket ||
-						input.socket.includes(intent.socket)
+						// Filter down to sockets that the user has scoped to:
+						// • Listening to intents from all sockets.
+						// • Listening to intents for a specific socket.
+						// • Listening to intents for a specific list of sockets.
+						const validSocket =
+							input.socket === undefined ||
+							input.socket === intent.socket ||
+							input.socket.includes(intent.socket)
 
-					if (validSocket === false) return
+						if (validSocket === false) return
+					}
 
 					controller.enqueue(intent)
 				}
@@ -104,7 +106,11 @@ export class Intent {
 				const intents: Array<IntentResponse> =
 					await ctx.db.intent.findMany({
 						where: {
-							...getWhere(ctx.client, input.signer, input.socket),
+							...getWhere(
+								ctx.client,
+								input?.signer,
+								input?.socket
+							),
 							createdAt: cursor ? { gt: cursor } : undefined
 						},
 						orderBy: {

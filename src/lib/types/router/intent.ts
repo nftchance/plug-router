@@ -24,13 +24,20 @@ export const IntentResponseSchema = IntentRequestSchema.merge(
 export type IntentRequest = z.infer<typeof IntentRequestSchema>
 export type IntentResponse = z.infer<typeof IntentResponseSchema>
 
-export const IntentStreamRequestSchema = z.object({
-	lastEventId: z.string().optional(),
-	signer: AddressesSchema.optional(),
-	socket: AddressesSchema.optional()
+export const IntentStreamRequestSchema = z
+	.object({
+		lastEventId: z.string().optional(),
+		signer: AddressesSchema.optional(),
+		socket: AddressesSchema.optional()
+	})
+	.optional()
+export const IntentStreamResponseSchema = z.object({
+	id: z.string(),
+	data: IntentResponseSchema
 })
 
 export type IntentStreamRequest = z.infer<typeof IntentStreamRequestSchema>
+export type IntentStreamResponse = z.infer<typeof IntentStreamResponseSchema>
 
 export const IntentInfiniteRequestSchema = z.object({
 	cursor: z.date().optional(),

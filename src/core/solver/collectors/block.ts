@@ -5,12 +5,10 @@ import { Collector } from "@/src/core/solver/collectors"
 
 const key = "NewBlock" as const
 
-export type BlockCollection = {
-	hash: string
-	number: number
-}
-
-export class BlockCollector extends Collector<typeof key, BlockCollection> {
+export class BlockCollector extends Collector<
+	typeof key,
+	Pick<providers.Block, "hash" | "number">
+> {
 	constructor(public readonly client: providers.WebSocketProvider) {
 		super(key)
 	}
@@ -20,10 +18,12 @@ export class BlockCollector extends Collector<typeof key, BlockCollection> {
 			try {
 				const block = await this.client.getBlock(blockNumber)
 
-				this.emit(emitter, {
+				const collection = {
 					hash: block.hash,
 					number: block.number
-				})
+				}
+
+				this.emit(emitter, collection)
 			} catch (err) {
 				console.error(`[${this.key}] Failed retrieving block.`)
 			}
