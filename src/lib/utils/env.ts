@@ -5,8 +5,6 @@ import { version } from "@/package.json"
 
 dotenv.config()
 
-const DEFAULT_DATABASE_URL =
-	"postgresql://postgres:postgres@localhost:5434/postgres"
 const DEFAULT_PORT = "4000"
 const DEFAULT_RATE_LIMIT_ALLOW_LIST = ["127.0.0.1", "localhost"].join(",")
 const DEFAULT_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000
@@ -15,7 +13,7 @@ const DEFAULT_RATE_LIMIT = 100
 export const envSchema = z.object({
 	// Top level definitions
 	VERSION: z.string().optional().default(version),
-	DATABASE_URL: z.string().optional().default(DEFAULT_DATABASE_URL),
+	DATABASE_URL: z.string().refine(url => url.startsWith("postgres")),
 	PORT: z.string().optional().default(DEFAULT_PORT),
 	API_URL: z
 		.string()
