@@ -39,11 +39,7 @@ export class IntentSolver<
 		return
 	}
 
-	private processBlock = async (collection: Collection<BlockCollector>) => {
-		collection
-	}
+	private processBlock = async (_: Collection<BlockCollector>) => {}
 
-	private processIntent = async (collection: Collection<IntentCollector>) => {
-		collection
-	}
+	private processIntent = async (_: Collection<IntentCollector>) => {}
 }
