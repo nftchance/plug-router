@@ -20,7 +20,7 @@ export type FlashbotsExecution = {
 const key = "FlashbotsExecution" as const
 
 export class FlashbotsExecutor<
-	TExecution extends FlashbotsExecution
+	TExecution extends FlashbotsExecution = FlashbotsExecution
 > extends Executor<typeof key, TExecution> {
 	public static key = key
 	public flashbotsClient: FlashbotsBundleProvider | undefined

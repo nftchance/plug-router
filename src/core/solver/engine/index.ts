@@ -1,14 +1,19 @@
 import { EventEmitter } from "node:events"
 
 import { Collector, Executor, Process } from "@/src/core"
-import { Network } from "@/src/lib"
+import { Collection, Execution, Network } from "@/src/lib"
 
 export * from "./config"
 
 export class Engine<
-	TCollectors extends Collector<any, any>,
-	TExecutors extends Executor<any, any>,
-	TProcesses extends Record<string, Process<TCollectors, TExecutors>>
+	TCollector extends Collector<string, any>,
+	TExecutor extends Executor<`${string}Execution`, any>,
+	TCollection extends Collection<TCollector>,
+	TExecution extends Execution<TExecutor>,
+	TProcesses extends Record<
+		string,
+		Process<TCollector, TExecutor, TCollection, TExecution>
+	>
 > {
 	constructor(
 		public readonly network: Network,
@@ -87,8 +92,8 @@ export class Engine<
 							key,
 							collection
 						}: {
-							key: TCollectors["key"]
-							collection: Parameters<TCollectors["emit"]>[1]
+							key: TCollector["key"]
+							collection: Parameters<TCollector["emit"]>[1]
 						}) => {
 							// * A process will always consume the collection however
 							//   that does not mean it will always be used. If there

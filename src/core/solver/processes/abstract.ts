@@ -1,8 +1,11 @@
 import { Collector, Executor } from "@/src/core"
+import { Collection, Execution } from "@/src/lib"
 
 export abstract class Process<
-	TCollector extends Collector<string, unknown>,
-	TExecutor extends Executor<`${string}Execution`, unknown>
+	TCollector extends Collector<string, any>,
+	TExecutor extends Executor<`${string}Execution`, any>,
+	TCollection extends Collection<TCollector>,
+	TExecution extends Execution<TExecutor>
 > {
 	constructor(public readonly key: string) {}
 
@@ -11,9 +14,9 @@ export abstract class Process<
 
 	abstract processCollection: <TKey extends TCollector["key"]>(
 		key: TKey,
-		collection: Parameters<TCollector["emit"]>[1]
+		collection: TCollection
 	) => Promise<{
 		key: TExecutor["key"]
-		execution: Parameters<TExecutor["execute"]>[0]
+		execution: TExecution
 	} | void>
 }

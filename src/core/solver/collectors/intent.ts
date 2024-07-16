@@ -19,9 +19,7 @@ export class IntentCollector extends Collector<
 
 	getCollectionStream = async (emitter: EventEmitter) => {
 		this.sdk.intent.onCreate.subscribe(this.options, {
-			onData: data => {
-				this.emit(emitter, data)
-			}
+			onData: data => this.emit(emitter, data)
 		})
 	}
 }
