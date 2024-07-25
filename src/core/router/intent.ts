@@ -19,16 +19,6 @@ export class Intent {
 		ctx: Context,
 		data: IntentRequest
 	): Promise<IntentResponse> => {
-		// TODO: Confirm the signature is valid -- Will need to support base
-		// signature validation as well as Merkle tree validation.
-		// 		NOTE: This is pending the audit changes to be pushed into the
-		//  	main protocol as the signature validation has been refactored
-		//  	to be more efficient and less complex. This will remove the
-		//  	need for the signature validation to make an onchain call.
-		//      	NOTE: The main benefit of the new architecture is that the
-		//          signatures can now be validated offchain without relying
-		//          on additional libraries like 0xSequence.
-
 		const recoveredSigner = ""
 
 		if (recoveredSigner !== data.signer) {
@@ -38,8 +28,21 @@ export class Intent {
 			})
 		}
 
-		const intent = await ctx.db.intent.create({
-			data
+		const intent = await ctx.db.livePlugs.create({
+			data: {
+				...data,
+				plugs: {
+					create: {
+						...data.plugs,
+						plugs: {
+							createMany: {
+								data: data.plugs.plugs
+							}
+						}
+					}
+				}
+			},
+			include: { plugs: { include: { plugs: true } } }
 		})
 
 		ctx.emitter.emit(Intent.STREAM_INTENT_KEY, data)
@@ -54,7 +57,7 @@ export class Intent {
 		let cursor: Date | undefined = undefined
 
 		if (input && input.lastEventId) {
-			const intentById = await ctx.db.intent.findFirst({
+			const intentById = await ctx.db.livePlugs.findFirst({
 				where: {
 					id: input.lastEventId
 				}
@@ -69,7 +72,7 @@ export class Intent {
 				const handleCreate = (intent: IntentResponse) => {
 					// Filter down to intents that have defined the authenticated
 					// client as the solver for the intent.
-					if (ctx.client.address !== intent.solver) return
+					if (ctx.client.address !== intent.plugs.solver) return
 
 					if (input) {
 						// Filter down to signers that the user has scoped to:
@@ -89,8 +92,8 @@ export class Intent {
 						// • Listening to intents for a specific list of sockets.
 						const validSocket =
 							input.socket === undefined ||
-							input.socket === intent.socket ||
-							input.socket.includes(intent.socket)
+							input.socket === intent.plugs.socket ||
+							input.socket.includes(intent.plugs.socket)
 
 						if (validSocket === false) return
 					}
@@ -104,7 +107,7 @@ export class Intent {
 				}
 
 				const intents: Array<IntentResponse> =
-					await ctx.db.intent.findMany({
+					await ctx.db.livePlugs.findMany({
 						where: {
 							...getWhere(
 								ctx.client,
@@ -113,6 +116,7 @@ export class Intent {
 							),
 							createdAt: cursor ? { gt: cursor } : undefined
 						},
+						include: { plugs: { include: { plugs: true } } },
 						orderBy: {
 							createdAt: "asc"
 						}
@@ -141,7 +145,7 @@ export class Intent {
 	): Promise<IntentInfiniteResponse> => {
 		const take = input.take ?? 20
 
-		const page = await ctx.db.intent.findMany({
+		const page = await ctx.db.livePlugs.findMany({
 			where: {
 				...getWhere(ctx.client, input.signer, input.socket),
 				createdAt: input.cursor
@@ -150,6 +154,7 @@ export class Intent {
 						}
 					: undefined
 			},
+			include: { plugs: { include: { plugs: true } } },
 			orderBy: {
 				createdAt: "desc"
 			},
@@ -179,6 +184,7 @@ export const getWhere = (
 			: Array.isArray(signers)
 				? { in: signers }
 				: signers
+
 	const socket =
 		sockets === undefined
 			? undefined
@@ -187,8 +193,10 @@ export const getWhere = (
 				: sockets
 
 	return {
-		solver: client.address,
-		signer,
-		socket
+		plugs: {
+			socket,
+			solver: client.address
+		},
+		signer
 	}
 }

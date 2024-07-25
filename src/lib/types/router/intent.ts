@@ -3,13 +3,26 @@ import { z } from "zod"
 import {
 	AddressSchema,
 	AddressesSchema,
+	Bytes32Schema,
+	BytesSchema,
 	SignatureSchema
 } from "@/src/lib/types/router/utils"
 
 export const IntentRequestSchema = z.object({
-	socket: AddressSchema,
-	solver: AddressSchema,
-	actions: z.array(z.string()).min(1),
+	plugs: z.object({
+		socket: AddressSchema,
+		solver: AddressSchema,
+		plugs: z
+			.array(
+				z.object({
+					target: AddressSchema,
+					value: z.bigint().min(BigInt(0)),
+					data: BytesSchema
+				})
+			)
+			.min(1),
+		salt: Bytes32Schema
+	}),
 	signer: AddressSchema,
 	signature: SignatureSchema
 })

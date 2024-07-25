@@ -200,6 +200,9 @@ async function generateProxyPackages(exports: Exports) {
 			.env.production.local
 			.env.local
 
+			# Miscellaneous files
+			scratch.ts
+
 			${ignorePaths.join("\n")}
   		`
 	)

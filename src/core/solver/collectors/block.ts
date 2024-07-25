@@ -5,10 +5,7 @@ import { Collector } from "@/src/core/solver/collectors"
 
 const key = "NewBlock" as const
 
-export class BlockCollector extends Collector<
-	typeof key,
-	Pick<providers.Block, "hash" | "number">
-> {
+export class BlockCollector extends Collector<typeof key, providers.Block> {
 	constructor(public readonly client: providers.WebSocketProvider) {
 		super(key)
 	}
@@ -17,12 +14,7 @@ export class BlockCollector extends Collector<
 		this.client.on("block", async (blockNumber: number) => {
 			const block = await this.client.getBlock(blockNumber)
 
-			const collection = {
-				hash: block.hash,
-				number: block.number
-			}
-
-			this.emit(emitter, collection)
+			this.emit(emitter, block)
 		})
 	}
 }

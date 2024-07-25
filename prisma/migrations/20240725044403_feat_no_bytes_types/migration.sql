@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Plug" ALTER COLUMN "data" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "Plugs" ALTER COLUMN "salt" SET DATA TYPE TEXT;
