@@ -14,10 +14,10 @@ export const defineConfig = (base: BaseConfig): Config => {
 
 	types = types
 		? {
-				...DEFAULT_SCHEMA.config.types,
+				...DEFAULT_SCHEMA.types,
 				...types
-		  }
-		: DEFAULT_SCHEMA.config.types
+			}
+		: DEFAULT_SCHEMA.types
 
 	const config: Config = {
 		// * Overwrite the default retry configuration with the provided
