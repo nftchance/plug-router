@@ -2,9 +2,9 @@
 	"name": "@nftchance/plug-router",
 	"version": "0.0.0",
 	"description": "Primary backend router for Plug intents and packaged SDK for external use.",
-	"author": "Plug <hello@onplug.io> (https://onplug.io)",
+	"author": "🔌 Plug <hello@onplug.io> (https://onplug.io)",
 	"maintainers": [
-		"🟠 CHANCE <chance@onplug.io>"
+		"🟠 CHANCE <chance@onplug.io> (https://onplug.io)"
 	],
 	"license": "MIT",
 	"repository": {

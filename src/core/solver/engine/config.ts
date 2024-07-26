@@ -1,3 +1,4 @@
+import { author, maintainers } from "@/package.json"
 import {
 	BaseConfig,
 	Config,
@@ -33,7 +34,7 @@ export const defineConfig = (base: BaseConfig): Config => {
 		contract: {
 			...DEFAULT_SCHEMA.config.contract,
 			...contract,
-			authors: ["@nftchance"]
+			authors: [author, ...maintainers]
 				.concat(contract?.authors ?? [])
 				.map(author => ` * @author ${author}`)
 				.join("\n")
