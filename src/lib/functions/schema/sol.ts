@@ -1,5 +1,5 @@
-import { TypedData, TypedDataParameter } from "abitype"
 import { TypedDataEncoder, keccak256, toUtf8Bytes } from "ethers"
+import { TypedData, TypedDataParameter } from "viem"
 
 import { DEFAULT_SCHEMA, SchemaConfig } from "@/src/lib"
 

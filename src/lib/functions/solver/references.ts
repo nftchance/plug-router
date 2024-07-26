@@ -1,6 +1,6 @@
 import dedent from "dedent"
-import { utils } from "ethers"
 import { default as fse } from "fs-extra"
+import { toEventSignature } from "viem"
 
 import { getArtifacts, getClient, getSources } from "@/src/lib/functions"
 import {
@@ -97,14 +97,15 @@ const generateStaticReference = async (reference: StaticReference) => {
             `
 
 		/// * Create a record of all the event topics for the contract.
-		const protocolInterface = new utils.Interface(abi)
 		const eventTopics: Record<string, string> = {}
 		for (let [_, event] of JSON.parse(abi)
 			.filter((x: any) => x.type === "event")
 			.entries()) {
-			eventTopics[event.name] = protocolInterface.getEventTopic(
-				event.name
-			)
+			eventTopics[event.name] = toEventSignature({
+				name: event.name,
+				type: "event",
+				inputs: event.inputs
+			})
 		}
 
 		contractInterface += dedent`\n
