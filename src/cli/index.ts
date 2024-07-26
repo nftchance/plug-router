@@ -11,14 +11,14 @@ command
 
 command
 	.command("init")
-	.description("Initialize a new instance of the Plug toolkit.")
+	.description("Initialize the Plug toolkit.")
 	.option("-c --config <config>", "Path to config file.")
 	.option("-r --root <root>", "Path to root directory.")
 	.action(init)
 
 command
 	.command("schema")
-	.description("Generate the full-suite schema for intent definitions.")
+	.description("Generate the full-suite schema.")
 	.option("-c --config <config>", "Path to config file.")
 	.option("-r --root <root>", "Path to root directory.")
 	.action(schema)

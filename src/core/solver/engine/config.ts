@@ -16,7 +16,7 @@ export const defineConfig = (base: BaseConfig): Config => {
 		? {
 				...DEFAULT_SCHEMA.config.types,
 				...types
-			}
+		  }
 		: DEFAULT_SCHEMA.config.types
 
 	const config: Config = {

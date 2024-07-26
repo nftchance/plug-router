@@ -28,8 +28,8 @@ export const LIVE_PLUGS_TYPES = {
 export const DEFAULT_SCHEMA = {
 	config: {
 		contract: {
-			name: "Temp",
-			filename: "Temp",
+			name: "Types",
+			filename: "Types",
 			license: "MIT",
 			solidity: "0.8.24"
 		},
@@ -42,8 +42,8 @@ export const DEFAULT_SCHEMA = {
 				typeName.slice(0, 1).toUpperCase() + typeName.slice(1)
 		},
 		out: {
-			schema: "./temp",
-			documentation: "./temp/docs"
+			schema: "./dist/contracts/",
+			documentation: "./dist/docs"
 		}
 	},
 	types: LIVE_PLUGS_TYPES

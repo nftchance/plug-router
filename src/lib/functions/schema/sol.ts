@@ -633,7 +633,7 @@ ${signerImplementation
 	}
 }
 
-export async function generate(config: SchemaConfig) {
+export async function generateTypesReference(config: SchemaConfig) {
 	const {
 		setup: eip712Setup,
 		typeHashGetters: eip712TypeHashGetters,
