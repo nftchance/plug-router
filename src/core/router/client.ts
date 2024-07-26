@@ -10,7 +10,7 @@ export class Client {
 	private readonly message = (address: string) =>
 		`Initialize ${address} as a solver in the Plug network.`
 
-	init = async (db: PrismaClient, input: ClientRequest) => {
+	public readonly init = async (db: PrismaClient, input: ClientRequest) => {
 		const { address, signature } = input
 
 		const signatureAddress = await recoverMessageAddress({

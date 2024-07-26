@@ -1,3 +1,5 @@
+import { createPublicClient, extractChain, http } from "viem"
+
 import { Client } from "@prisma/client"
 import { TRPCError, sse } from "@trpc/server"
 
@@ -8,6 +10,8 @@ import {
 	IntentRequest,
 	IntentResponse,
 	IntentStreamRequest,
+	LIVE_PLUGS_TYPES,
+	chains,
 	streamToAsyncIterable
 } from "@/src/lib"
 import { AuthenticatedContext, Context } from "@/src/server"
@@ -15,16 +19,65 @@ import { AuthenticatedContext, Context } from "@/src/server"
 export class Intent {
 	static STREAM_INTENT_KEY = "intent"
 
+	private readonly domain = (
+		chainId: (typeof chains)[number]["id"],
+		address: string,
+		name = "Plug",
+		version = "1"
+	) => {
+		const client = createPublicClient({
+			chain: extractChain({
+				chains,
+				id: chainId
+			}),
+			transport: http()
+		})
+
+		const domain = {
+			name,
+			version,
+			chainId,
+			verifyingContract: address as `0x${string}`
+		}
+
+		return { client, domain }
+	}
+
+	// NOTE: This function effectively does nothing besides doing a full coverage
+	//       type cast to `0x${string}` to make the types work due to the strictness
+	//       of the viem types.
+	private readonly message = (message: IntentRequest["plugs"]) => ({
+		socket: message.socket as `0x${string}`,
+		solver: message.solver as `0x${string}`,
+		salt: message.salt as `0x${string}`,
+		plugs: message.plugs.map(plug => ({
+			target: plug.target as `0x${string}`,
+			value: plug.value,
+			data: plug.data as `0x${string}`
+		}))
+	})
+
+	public readonly verify = async (data: IntentRequest) => {
+		const { client, domain } = this.domain(1, data.plugs.socket)
+
+		return await client.verifyTypedData({
+			address: data.signer as `0x${string}`,
+			types: LIVE_PLUGS_TYPES,
+			primaryType: "Plugs",
+			domain,
+			message: this.message(data.plugs),
+			signature: data.signature as `0x${string}`
+		})
+	}
+
 	public readonly create = async (
 		ctx: Context,
 		data: IntentRequest
 	): Promise<IntentResponse> => {
-		const recoveredSigner = ""
-
-		if (recoveredSigner !== data.signer) {
+		if ((await this.verify(data)) === false) {
 			throw new TRPCError({
 				code: "BAD_REQUEST",
-				message: `Recovered signer ${recoveredSigner} does not match provided signer ${data.signer}.`
+				message: `Invalid signer/signature pair provided.`
 			})
 		}
 

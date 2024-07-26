@@ -32,12 +32,12 @@ export type NetworkConfig = {
 
 export type Network = NetworkBase & NetworkReferences & NetworkConfig
 
-export type BaseConfig = Partial<Retries> &
+export type BaseSolverConfig = Partial<Retries> &
 	(
 		| Record<"networks", Record<keyof typeof DEFAULT_NETWORKS, Network>>
 		| undefined
 	)
 
-export type Config = Retries & {
+export type SolverConfig = Retries & {
 	networks: Record<keyof typeof DEFAULT_NETWORKS, Network>
 }

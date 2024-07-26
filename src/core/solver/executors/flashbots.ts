@@ -1,4 +1,4 @@
-import { Wallet, providers } from "ethers"
+import { TransactionRequest, Wallet, WebSocketProvider } from "ethers"
 
 import {
 	FlashbotsBundleProvider,
@@ -10,7 +10,7 @@ import {
 import { Executor } from "@/src/core/solver/executors"
 
 export type FlashbotsExecution = {
-	transaction: providers.TransactionRequest
+	transaction: TransactionRequest
 	config?: Partial<{
 		// ! How many blocks in the future we will allow settlement within.
 		buffer: number
@@ -26,7 +26,7 @@ export class FlashbotsExecutor<
 	public flashbotsClient: FlashbotsBundleProvider | undefined
 
 	constructor(
-		public readonly client: providers.WebSocketProvider,
+		public readonly client: WebSocketProvider,
 		public readonly signer: Wallet
 	) {
 		super(key)

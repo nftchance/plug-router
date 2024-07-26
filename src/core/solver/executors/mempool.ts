@@ -1,9 +1,9 @@
-import { BigNumber, PopulatedTransaction, Wallet } from "ethers"
+import { TransactionRequest, Wallet } from "ethers"
 
 import { Executor } from "@/src/core/solver/executors"
 
 export type MempoolExecution = {
-	transaction: PopulatedTransaction
+	transaction: TransactionRequest
 	gasInfo?: {
 		totalProfit: number
 		bidPercentage?: number
@@ -19,11 +19,13 @@ export class MempoolExecutor<
 
 	constructor(public readonly signer: Wallet) {
 		super(key)
+
+		if (!this.signer.provider) throw new Error("Signer provider not set")
 	}
 
 	execute = async ({ transaction, gasInfo }: TExecution) => {
 		// ! Estimate the gas consumption.
-		const gasEstimate = await this.signer.provider.estimateGas(transaction)
+		const gasEstimate = await this.signer.estimateGas(transaction)
 
 		let bidGasPrice = BigInt(0)
 		if (gasInfo) {
@@ -36,14 +38,15 @@ export class MempoolExecutor<
 				BigInt(100)
 		} else {
 			// ! Use the blocks current gas price if one was not provided.
-			bidGasPrice = await this.signer.provider
-				.getFeeData()
+			bidGasPrice = await this.signer
+				// Provider is not-null because we checked for it in the constructor.
+				.provider!.getFeeData()
 				.then(feeData =>
 					BigInt(feeData?.maxFeePerGas?.toString() || "0")
 				)
 		}
 
-		transaction.gasPrice = BigNumber.from(bidGasPrice.toString())
+		transaction.gasPrice = bidGasPrice
 
 		// ! Send the transaction.
 		await this.signer.sendTransaction(transaction)

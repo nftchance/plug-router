@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander"
 
-import { init, processes, references, start } from "@/src/lib"
+import { init, processes, references, schema, start } from "@/src/lib"
 
 const command = new Command()
 
@@ -15,6 +15,13 @@ command
 	.option("-c --config <config>", "Path to config file.")
 	.option("-r --root <root>", "Path to root directory.")
 	.action(init)
+
+command
+	.command("schema")
+	.description("Generate the full-suite schema for intent definitions.")
+	.option("-c --config <config>", "Path to config file.")
+	.option("-r --root <root>", "Path to root directory.")
+	.action(schema)
 
 command
 	.command("processes")

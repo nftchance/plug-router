@@ -4,21 +4,45 @@ import {
 	DEFAULT_NETWORKS,
 	DEFAULT_NETWORK_CONFIG,
 	DEFAULT_NETWORK_REFERENCES,
-	DEFAULT_NETWORK_RETRIES
+	DEFAULT_NETWORK_RETRIES,
+	DEFAULT_SCHEMA
 } from "@/src/lib"
 
 export const defineConfig = (base: BaseConfig): Config => {
 	// * Destructure the network configuration from the base configuration.
-	const { networks, ...retries } = base
+	let { networks, retries, delay, contract, out, dangerous, types } = base
+
+	types = types
+		? {
+				...DEFAULT_SCHEMA.config.types,
+				...types
+			}
+		: DEFAULT_SCHEMA.config.types
 
 	const config: Config = {
-		// * Set the default retry configuration for the network.
-		...DEFAULT_NETWORK_RETRIES,
 		// * Overwrite the default retry configuration with the provided
 		//   values when they are not undefined.
-		...retries,
+		retries: retries ?? DEFAULT_NETWORK_RETRIES.retries,
+		delay: delay ?? DEFAULT_NETWORK_RETRIES.delay,
 		/// * Set the default networks for the Engine.
-		networks: {}
+		networks: {},
+		out: {
+			...DEFAULT_SCHEMA.config.out,
+			...out
+		},
+		contract: {
+			...DEFAULT_SCHEMA.config.contract,
+			...contract,
+			authors: ["@nftchance"]
+				.concat(contract?.authors ?? [])
+				.map(author => ` * @author ${author}`)
+				.join("\n")
+		},
+		dangerous: {
+			...DEFAULT_SCHEMA.config.dangerous,
+			...dangerous
+		},
+		types
 	}
 
 	// * While we have a set of default networks, the configuration only
@@ -54,3 +78,9 @@ export const defineConfig = (base: BaseConfig): Config => {
 
 	return config
 }
+
+defineConfig({
+	networks: {},
+	retries: 3,
+	delay: 1000
+})

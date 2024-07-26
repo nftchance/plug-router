@@ -1,5 +1,6 @@
 import { z } from "zod"
 
+import { chains, literalUnion } from "@/src/lib"
 import {
 	AddressSchema,
 	AddressesSchema,
@@ -23,6 +24,7 @@ export const IntentRequestSchema = z.object({
 			.min(1),
 		salt: Bytes32Schema
 	}),
+	chainId: literalUnion(chains.map(chain => chain.id)),
 	signer: AddressSchema,
 	signature: SignatureSchema
 })
@@ -30,7 +32,10 @@ export const IntentResponseSchema = IntentRequestSchema.merge(
 	z.object({
 		id: z.string(),
 		createdAt: z.date(),
-		updatedAt: z.date()
+		updatedAt: z.date(),
+		// NOTE: This is a workaround that recasts the chainId to a number
+		//       because prisma does not return literals.
+		chainId: z.number()
 	})
 )
 
