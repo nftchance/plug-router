@@ -1,5 +1,5 @@
 import { Collector, Executor } from "@/src/core"
-import { DEFAULT_NETWORKS, References } from "@/src/lib"
+import { References } from "@/src/lib"
 
 export type Collectors = Array<Collector<any, any>>
 export type Executors = Array<Executor<any, any>>
@@ -31,13 +31,3 @@ export type NetworkConfig = {
 }
 
 export type Network = NetworkBase & NetworkReferences & NetworkConfig
-
-export type BaseSolverConfig = Partial<Retries> &
-	(
-		| Record<"networks", Record<keyof typeof DEFAULT_NETWORKS, Network>>
-		| undefined
-	)
-
-export type SolverConfig = Retries & {
-	networks: Record<keyof typeof DEFAULT_NETWORKS, Network>
-}

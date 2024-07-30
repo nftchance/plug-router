@@ -43,7 +43,8 @@ export const DEFAULT_SCHEMA = {
 		},
 		out: {
 			schema: "./dist/contracts/",
-			documentation: "./dist/docs"
+			documentation: "./dist/docs/",
+			zod: "./src/lib/types/schema/"
 		}
 	},
 	types: LIVE_PLUGS_TYPES

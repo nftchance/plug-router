@@ -7,7 +7,7 @@ import {
 	Bytes32Schema,
 	BytesSchema,
 	SignatureSchema
-} from "@/src/lib/types/router/utils"
+} from "@/src/lib/types"
 
 export const IntentRequestSchema = z.object({
 	plugs: z.object({

@@ -21,8 +21,9 @@
 		"onplug"
 	],
 	"scripts": {
+		"prebuild:schema": "pnpm plug:schema",
+		"prebuild:zod": "pnpm plug:zod",
 		"prebuild:prisma": "pnpm prisma:generate",
-		"prebuild:schema": "pnpm plug schema",
 		"prebuild:lint": "tsc --noEmit",
 		"prebuild:format": "prettier --write .",
 		"prebuild": "run-s prebuild:*",
@@ -41,7 +42,13 @@
 		"prisma:pull": "pnpm prisma db pull",
 		"prisma:seed": "pnpm prisma db seed",
 		"prisma:reset": "pnpm prisma db push --force-reset && pnpm prisma db push",
-		"plug": "tsx ./src/cli/index.ts"
+		"plug": "tsx ./src/cli/index.ts",
+		"plug:init": "pnpm plug init",
+		"plug:schema": "pnpm plug schema",
+		"plug:zod": "pnpm plug zod",
+		"plug:processes": "pnpm plug processes",
+		"plug:references": "pnpm plug references",
+		"plug:start": "pnpm plug start"
 	},
 	"dependencies": {
 		"@flashbots/ethers-provider-bundle": "1.0.0",

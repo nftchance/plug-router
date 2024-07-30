@@ -43,20 +43,6 @@ export class Intent {
 		return { client, domain }
 	}
 
-	// NOTE: This function effectively does nothing besides doing a full coverage
-	//       type cast to `0x${string}` to make the types work due to the strictness
-	//       of the viem types.
-	private readonly message = (message: IntentRequest["plugs"]) => ({
-		socket: message.socket as `0x${string}`,
-		solver: message.solver as `0x${string}`,
-		salt: message.salt as `0x${string}`,
-		plugs: message.plugs.map(plug => ({
-			target: plug.target as `0x${string}`,
-			value: plug.value,
-			data: plug.data as `0x${string}`
-		}))
-	})
-
 	public readonly verify = async (data: IntentRequest) => {
 		const { client, domain } = this.domain(1, data.plugs.socket)
 
@@ -65,7 +51,7 @@ export class Intent {
 			types: LIVE_PLUGS_TYPES,
 			primaryType: "Plugs",
 			domain,
-			message: this.message(data.plugs),
+			message: data.plugs,
 			signature: data.signature as `0x${string}`
 		})
 	}
